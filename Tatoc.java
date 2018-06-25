@@ -1,4 +1,4 @@
-package Tatoc_Ng;
+package Testing;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -20,7 +20,7 @@ public class Tatoc {
   //Launch Browser
   @BeforeClass
   public void launchbrowser() {
-	  System.setProperty("webdriver.chrome.driver", "D:\\chromedriver_win32\\chromedriver.exe");
+	  System.setProperty("webdriver.chrome.driver", "C:\\Users\\rishabhverma\\Downloads\\chromedriver_win32\\chromedriver.exe");
 	  driver = new ChromeDriver();
 	  
   }
@@ -33,26 +33,44 @@ public class Tatoc {
   }
   @Test(priority = 2)
   public void clickonbasiccourseandclickongreenbox() {
-	  driver.findElement(By.linkText("Basic Course"));
+	  driver.findElement(By.linkText("Basic Course")).click();
 	  driver.findElement(By.className("greenbox")).click();
 	  System.out.println("Successfully click on Basic course and greenbox");
 	  
   }
   @Test(priority = 3)
   public void box1andbox2colorsame() {
-	    driver.switchTo().frame("main");
-		WebElement box1 = driver.findElement(By.id("answer"));
-		String Box1 = box1.getAttribute("class");
-		String Box2 = "";
-		while(!Box1.equals(Box2)){
-		    driver.switchTo().frame("main");
-		    driver.findElement(By.cssSelector("a")).click();
-		    driver.switchTo().frame("child");
-		    Box2=driver.findElement(By.id("answer")).getAttribute("class");
-		}
-		driver.switchTo().frame("main");
-		driver.findElement(By.linkText("Proceed")).click();
-		System.out.println("Successfully matches of both the box and click on Proceed Button");
+	  
+	     String box1;
+	    String box2;
+	  boolean b= true;
+		  driver.switchTo().frame("main");
+	  box1= driver.findElement(By.id("answer")).getAttribute("class");
+	  {
+		System.out.println(box1);
+	  while(b)
+	       {
+	    driver.switchTo().frame("child");
+	    box2= driver.findElement(By.id("answer")).getAttribute("class");
+	    System.out.println(box2);
+	    if(box1.equals(box2))
+			{
+				b=false;
+			//driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS) ;
+			driver.switchTo().parentFrame();
+			driver.findElement(By.linkText("Proceed")).click();
+			
+			}
+			else
+			{
+				driver.switchTo().parentFrame();
+				driver.findElement(By.linkText("Repaint Box 2")).click();
+			}
+	       }
+	  }
+			
+	       
+	   
   }
   @Test(priority = 4)
   public void draganddropfunction() {
@@ -65,27 +83,19 @@ public class Tatoc {
   }
   @Test(priority = 5)
   public void newwindowandsearchsomething() {
-	// It will return the parent window name as a String
-		String parentWindow = driver.getWindowHandle();
-		// This will return the number of windows opened by Webdriver and will return Set of St//rings
-		Set<String> handles = driver.getWindowHandles();
-		System.out.println(handles);
-		Iterator<String> I1= handles.iterator();
-		while(I1.hasNext())
-		{
-		   String child_window=I1.next();
-		// Here we will compare if parent window is not equal to child window then we            will close 
-		if(!parentWindow.equals(child_window))
-		{
-		driver.switchTo().window(child_window);
-		    	driver.findElement(By.id("name")).sendKeys("Rishabh");
-			    driver.findElement(By.id("submit")).click();
-			    break;
-			}
-	    }
-		driver.switchTo().window(parentWindow);
-		driver.findElement(By.linkText("Proceed")).click();
-	    driver.switchTo().window(parentWindow);
+	  driver.findElement(By.linkText("Launch Popup Window")).click();
+	  //to open new tab
+	   String abc = driver.getWindowHandle();
+	   for( String xyz : driver.getWindowHandles())
+	   {
+	    	driver.switchTo().window(xyz);
+	   }
+	    
+	    driver.findElement(By.id("name")).sendKeys("Rishabh");
+	    driver.findElement(By.id("submit")).click();
+	    driver.switchTo().window(abc);
+	    driver.findElement(By.linkText("Proceed")).click();
+	   
 	    System.out.println("Successfully opening of new tab and seacrching");
   }
   @Test(priority = 6)
